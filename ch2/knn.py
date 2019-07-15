@@ -55,6 +55,10 @@ def auto_norm(data_set):
     norm_mat = data_set - np.tile(min_values, (m, 1))  # np.tile(data. (m,n)): 把data扩展为行的m倍,列的n倍
     norm_mat = norm_mat / np.tile(ranges, (m, 1))      # 矩阵元素相除
 
+    # # -------第二种实现方式---start---------------------------------------
+    # norm_mat = (data_set - min_values) / ranges
+    # # -------第二种实现方式---end---------------------------------------------
+
     return norm_mat, ranges, min_values
 
 
@@ -73,14 +77,21 @@ def classify(inX, data_set, labels, k):
     :return: 新样本所属类别
     """
     size = data_set.shape[0]  # 样本数
-    # 欧式距离
+    """
+    欧氏距离：点到点之间的距离
+        第一行： 同一个点 到 dataSet 的第一个点的距离。
+        第二行： 同一个点 到 dataSet 的第二个点的距离。
+        ...
+        第N行： 同一个点 到 dataSet 的第N个点的距离。
+    """
     diff_mat = np.tile(inX, (size, 1)) - data_set
     sq_diff_mat = diff_mat ** 2
     sq_distance = sq_diff_mat.sum(axis=1)  # axis=1:行向量相加
     sq_distance = np.sqrt(sq_distance)
 
-    # 排序
-    sorted_distinct = sq_distance.argsort()  # 返回的是距离从小到大的索引值
+    # 根据距离排序从小到大的排序，返回对应的索引位置
+    # argsort() 是将x中的元素从小到大排列，提取其对应的index（索引），然后输出到y
+    sorted_distinct = sq_distance.argsort()
 
     # 统计前k个最近样本对应的类别数
     class_count = {}
@@ -96,13 +107,14 @@ def classify(inX, data_set, labels, k):
 
 def date_class_test():
     """
-    测试KNN分类错误率：切分训练集和测试集
+    对约会网站的测试方法，并将分类错误的数量和分类错误率打印出来
     """
+    # 设置测试数据的的一个比例（训练数据集比例=1-hoRatio）
     ho_ratio = 0.10
     data_mat, data_label = file2matrix('datingTestSet2.txt')
     norm_mat, _, _ = auto_norm(data_mat)
     m = norm_mat.shape[0]
-    num_test_vecs = int(m * ho_ratio)
+    num_test_vecs = int(m * ho_ratio)  # 设置测试样本数
     error_count = 0.0
     for i in range(num_test_vecs):
         result = classify(norm_mat[i, :], norm_mat[num_test_vecs:m, :], data_label[num_test_vecs:m], 5)
@@ -128,7 +140,11 @@ def classify_person():
 
 
 def img2vector(file_name):
-    """ 将图像转换为向量格式 """
+    """
+    将图像转换为向量格式
+    输入数据的图片格式是 32 * 32的
+    该函数创建 1 * 1024 的NumPy数组，然后打开给定的文件，循环读出文件的前32行，并将每行的头32个字符值存储在NumPy数组中，最后返回数组。
+    """
     return_vect = np.zeros((1, 1024))
     with open(file_name) as fr:
         for i in range(32):
