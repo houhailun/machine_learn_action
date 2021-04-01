@@ -2,7 +2,8 @@
 # -*- coding:utf-8 -*-
 
 """
-关联规则(一种推荐算法)：联分析是一种在大规模数据集中寻找有趣关系的一个工具集，有趣的关系可以分为：频繁项集和关联规则；可以分析通过购买某种物品会买其他哪种物品来进行推荐
+关联规则(一种推荐算法)：关联分析是一种在大规模数据集中寻找有趣关系的一个工具集，
+有趣的关系可以分为：频繁项集和关联规则；可以分析通过购买某种物品会买其他哪种物品来进行推荐
 
 名词解释：
     事务：一条交易认为是一个事务
@@ -190,9 +191,9 @@ class FP_growth:
 if __name__ == "__main__":
     cls = AprioriAlgorithm()
 
-    # L, support_data = cls.apriori()
-    # print(L)
-    # print(support_data)
+    L, support_data = cls.apriori()
+    print(L)
+    print(support_data)
     node = TreeNode('pyramid', 9, None)
     node.children['eye'] = TreeNode('eye', 13, None)
     node.disp()

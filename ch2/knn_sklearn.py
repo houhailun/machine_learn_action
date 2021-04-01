@@ -29,6 +29,13 @@ class KNN:
         cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
 
         for weights in ['uniform', 'distance']:
+            # 参数说明:
+            # n_neighbors: 用来确定多数投票规则的邻居数K
+            # weights : 在进行分类判断的时候给最近邻的点加上权重，它的默认值是'uniform',也就是等权重，
+            #   所以在这种情况下我们就可以使用多数投票规则来判断输入实例的类别预测。
+            #   还有一个选择是'distance',是按照距离的倒数给定权重
+            # algorithm 是分类时采取的算法，有 {‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}，默认为auto，会自动进行选择最合适的算法
+            # p: p=1，距离方法定义为曼哈顿距离，在p=2的时候我们定为欧几里得距离。默认值为2
             clf = neighbors.KNeighborsClassifier(n_neighbors=self.neighbors, weights=weights)
             clf.fit(self.X, self.y)
 

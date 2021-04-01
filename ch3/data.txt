@@ -1,0 +1,8 @@
+170 65 thin
+160 60 fat
+180 70 thin
+150 80 fat
+120 50 fat
+110 40 thin
+170 80 fat
+161 60 thin

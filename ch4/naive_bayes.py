@@ -58,11 +58,12 @@ class Bayes(object):
 
     def train_baye(self, train_matrix, train_label):
         """ 训练算法 """
-        num_train_docs = len(train_matrix)
-        num_words = len(train_matrix[0])
-        p_abusive = sum(train_label) / float(num_train_docs)  # 先验概率
-        p0_num = p1_num = np.ones(num_words)
+        num_train_docs = len(train_matrix)  # 文档矩阵中文档的数据
+        num_words = len(train_matrix[0])    # 词条向量的长度
+        p_abusive = sum(train_label) / float(num_train_docs)  # 所有文档中属于类1所占的比例p(c=1), 先验概率
+        p0_num = p1_num = np.ones(num_words)  # 创建一个长度为词条向量等长的列表
         p0_denom = p1_denom = 2.0
+        # 遍历每一篇文档的词条向量
         for i in range(num_train_docs):
             if train_label[i] == 1:
                 p1_num += train_matrix[i]
@@ -90,15 +91,11 @@ def test_baye():
     vocab = baye.create_vocab_list(data)
     train_mat = baye.word_2_vec(vocab, data)
 
-    p0_v, p1_v, p_ab = baye.train_baye(np.array())
+    p0_v, p1_v, p_ab = baye.train_baye(train_mat, class_vec)
     test_entry = ['love', 'my']
     this_doc = np.array(baye.word_2_vec(vocab, test_entry))
     print('test_entry:%s classified as:', baye.classify_baye())
 
 
 if __name__ == "__main__":
-    # baye = Bayes()
-    # data, class_vec = baye.load_data_set()
-    # vocab = baye.create_vocab_list(data)
-    # return_vec = baye.word_2_vec(vocab, data)
     test_baye()

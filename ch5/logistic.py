@@ -4,6 +4,20 @@
 """
 模块说明：逻辑回归模型
 算法描述：不同于线性回归的预测值是连续值，LR预测值是离散值，典型的为二分类0，1，这里引用sigmod函数实现
+    问题1、为什么分类模型的逻辑回归不叫逻辑分类呢？
+    Answer：LR是用回归的方法来实现分类效果的，即通过回归方法拟合数据，提出阈值，大于阈值的为1，小于的为0分类
+        确定是线性回归拟合容易受异常点干扰
+    问题2：找到一个办法解决掉回归的函数严重受离群值影响的办法
+    Answer：非线性拟合，sigmod(z) = 1 / (1 + E-z), 将(-inf, +inf)的数据映射到(0,1)范围
+        其中z=W*X为线性回归；算子输出的是预测为正类的概率
+        P(y=1|w,x) = g(z),  P(y=0|w,x) = 1 - g(z), 则P(正确) = g(z)**yi * (1-g(z))**(1-yi)
+    问题3：如何确定判断分类的阈值
+    Answer: 不同系统的阈值标准不一样，比如癌症诊断需要低阈值，尽可能判断出患癌症；验证码系统需要高阈值，尽可能准确
+    问题4：损失函数
+    Answer: 现在已经得到映射函数f(x) = sigmid(z), 目标是找到w，使得P(正确)概率最大
+        利用极大似然准则，P(正确)最大是由每一个样本的P(正确)概率最大产生的，推导出损失函数
+    问题5: 有了损失函数后，如何进一步来优化求得w呢
+    Answer: 根据梯度下降法求W
 """
 
 import numpy as np
@@ -15,7 +29,8 @@ class LR(object):
     def __init__(self):
         pass
 
-    def load_data_set(self):
+    @staticmethod
+    def load_data_set():
         fr = open('testSet.txt')
         data_mat = []
         label_mat = []
@@ -45,7 +60,7 @@ class LR(object):
         m, n = np.shape(_data_mat)  # m个样本，维度为n
         alpha = 0.001               # 步长
         max_cycles = 500            # 最大迭代次数
-        weights = np.ones((n, 1))
+        weights = np.ones((n, 1))   # 初始化w
         for k in range(max_cycles):
             h = self.sigmoid(_data_mat * weights)
             error = _label_mat - h
@@ -112,7 +127,6 @@ if __name__ == "__main__":
     lr = LR()
     mat, labels = lr.load_data_set()
     wei = lr.grad_ascent(mat, labels)
-    #print(wei)
     lr.plot_bestfit(wei, mat, labels)
     #wei = lr.random_grad_ascent()
     print(wei)
